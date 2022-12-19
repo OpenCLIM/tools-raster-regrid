@@ -1,0 +1,25 @@
+kind: M
+api_version: v1beta2
+metadata:
+  display_name: ToolSet:Raster-regrid
+  name: toolset-raster-regrid
+  summary: Tool for converting rasters to another grid
+  publisher: Newcastle University
+  source_code: https://github.com/OpenCLIM/tools-raster-regrid
+  description: >
+    Convert a passed raster file, or set of, to a different grid description.
+spec:
+  inputs:
+    dataslots:
+      - name: Input data files
+        description: A single, or set of, .asc files output from the UDM model
+        path: inputs/layers
+        required: true
+        default:
+          - 129f9361-b2ed-460f-a44b-9eeaf00b769c
+
+  outputs:
+    datasets:
+      - name: outputs/*.asc
+        type: folder
+        description: path to processed data outputs
