@@ -10,11 +10,12 @@ def grid_file_to_12km_rcm(file):
     """
 
     # get just the name of the file (remove the extension)
-    file_name = file.split('.')[0]
+    file_name = file.split('/')[-1]
+    file_name = file_name.split('.')[0]
 
     # re-grid to the 12km RCM grid, save as virtual raster in the temp directory
     subprocess.run(["gdalwarp", "-te", "0", "12000", "660000", "1212000", "-tr", "12000", "12000", "-r", "sum",
-                    join(data_path, inputs_directory, file),
+                    file,
                     join(data_path, temp_directory, '%s-%s.vrt' % (file_name, 'temp'))])
 
     # save the virtual raster as an .asc in the output directory
@@ -23,6 +24,24 @@ def grid_file_to_12km_rcm(file):
          join(data_path, outputs_directory, "%s-12km-sum.asc" % file_name)])
 
     return
+
+
+def search_for_files(base_search_path):
+    """
+    Search for files in directory and subdirectories.
+
+    Return None is no file found.
+    """
+    files = []  # set in case no file is passed
+    extensions = ['asc','']
+    for extension in extensions:
+
+        for dirpath, dirnames, filenames in walk(base_search_path):
+            for filename in [f for f in filenames if f.endswith(".%s" %extension)]:
+                files.append(join(dirpath, filename))
+
+    return files
+
 
 ## set paths
 # set data path and directory names
@@ -54,10 +73,11 @@ for file in files:
 
 ## start the processing
 # get list of input files to loop through
-files = [f for f in listdir(join(data_path, inputs_directory)) if isfile(join(data_path, inputs_directory, f))]
-print('files to loop through: %s' %files)
+files = search_for_files(join(data_path, inputs_directory))
+print('Files to loop through: %s' %files)
 
 # loop through the files and re-grid
 for file in files:
+    print('Processing file:', file)
     grid_file_to_12km_rcm(file)
 

@@ -1,0 +1,19 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: docker build . -t regrid
+
+      - name: Test - all in base directory
+        run: docker run -v $PWD/data:/data -t regrid
+
+      - name: Test - subdirectory data
+        run: docker run -v $PWD/data_1:/data -t regrid
