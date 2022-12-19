@@ -13,7 +13,7 @@ spec:
     dataslots:
       - name: Input data files
         description: A single, or set of, .asc files output from the UDM model
-        path: inputs/layers
+        path: inputs
         required: true
         default:
           - 129f9361-b2ed-460f-a44b-9eeaf00b769c
